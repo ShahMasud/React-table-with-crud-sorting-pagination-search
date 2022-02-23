@@ -145,9 +145,9 @@ const Home = () => {
                    <td>{itemval.lname}</td>
                    <td>{itemval.uname}</td>
                    <td> 
-                        <div style={{color:"red"}}>
+                        <div className='gap-4 text-center' style={{color:"red", width:"50%"}}>
                         <TiDelete onClick={()=> {deleteItem(itemval.uname)}}/>
-                        <Button onClick={()=>updateRow(itemval.uname)} className='bg-transparent text-black'>update</Button>
+                        <Button onClick={()=>updateRow(itemval.uname)} className='bg-transparent text-black'>edit</Button>
                         </div>
                    </td>
                    </tr>    
