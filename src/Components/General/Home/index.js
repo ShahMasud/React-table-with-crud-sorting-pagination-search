@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Container, Form, Table } from 'react-bootstrap'
+import { Button, Container, Form, Table, Modal } from 'react-bootstrap'
 import { useNavigate } from 'react-router-dom';
 // import { useNavigate } from 'react-router-dom';
 import { TiDelete} from "react-icons/ti";
@@ -16,7 +16,17 @@ const Home = () => {
         uname:""
     });
 
-    const [isEditItem, setIsEditItem]= useState(null);
+    const [isEditItem, setIsEditItem]= useState("");
+
+    //======================================//
+    // states for modal
+
+    const [show, setShow] = useState(false);
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    //============================================//
+
 
     // code for input fields //
 
@@ -50,7 +60,7 @@ const Home = () => {
 
     // code for adding row dynamically in a table   //  
 
-    const addEmployee = () =>{
+    const addEmployee = (uname) =>{
         setItems((olditems)=>{
             return [...olditems, data];
         });
@@ -59,7 +69,9 @@ const Home = () => {
             lname:'',
             uname:""
         });
+        setShow(false);
     };
+    
 
     // code for delete row in a table //
 
@@ -74,58 +86,82 @@ const Home = () => {
 
     // code for edit row in a table //
     
-    const updateRow =(uname)=>{
+    const editRow =(uname)=>{
         let newEditItem=items.find((arrElem)=>{
             return arrElem.uname === uname;
         })
-        console.log(newEditItem);
+        let INDEX = items.indexOf(newEditItem);
+        console.log(INDEX);
+
         setData({
             fname: newEditItem.fname,
             lname: newEditItem.lname,
             uname: newEditItem.uname
-        });
+        });  
 
-        
-        
+        setIsEditItem(INDEX);
+        handleShow();
     }
 
     // code to update row in a table //
 
-    const updatItem =(uname)=>{
-        setIsEditItem(uname);
-        setItems(
-           items.map((elem)=>{
-               if(elem.uname===isEditItem){
-                   return {...elem, fname:setData.fname, lname:setData.lname, uname:setData.uname }
-               }
-           })
-       )
+    const updatItem =()=>{
+        let a = items[isEditItem]=data;
+        // console.log(isEditItem);
+        console.log(a);
+        setData({
+            fname:a.fname,
+            lname:a.lname,
+            uname: a.uname
+        });
+
+        setData({
+            fname:"",
+            lname:'',
+            uname:""
+        });
+        setShow(false);
        
     }
    
 
   return (
     <Container className='mt-4'>
-     
-     <h5>Put the below details for employee</h5>
-     <Form className='mb-4'>
+
+            {/* //============================= */}
+            <div className='text-center'><Button className='mb-4 justify-content-center bg-info text-black' onClick={handleShow} variant="primary">add row</Button></div>
+
+            <Modal show={show} onHide={handleClose}>
+                <Modal.Header closeButton>
+                <Modal.Title>Put the below details for employee</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                <Form className='mb-4'>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                 
-                <Form.Control type="text" name="fName" value={data.fname} onChange={inputEvent} placeholder="enter first name" />
+                <Form.Control type="text" name="fName" value={data?.fname} onChange={inputEvent} placeholder="enter first name" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                
-                <Form.Control type="text" name="lName" value={data.lname} onChange={inputEvent} placeholder="enter last name" />
+                <Form.Control type="text" name="lName" value={data?.lname} onChange={inputEvent} placeholder="enter last name" />
             </Form.Group>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                
-                <Form.Control type="text" name="uName" value={data.uname} onChange={inputEvent} placeholder="enter username" />
+                <Form.Control type="text" name="uName" value={data?.uname} onChange={inputEvent} placeholder="enter username" />
             </Form.Group>
-            <Button className='me-4' onClick={addEmployee} variant="primary">Add</Button>
-            <Button onClick={updatItem} variant="primary">update</Button>
+            
         </Form>
+                </Modal.Body>
+                <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>Close</Button>
+                <Button onClick={updatItem} variant="primary">update</Button>
+                <Button variant="primary" onClick={addEmployee}>add row</Button>
+                </Modal.Footer>
+            </Modal>
+            {/* ========================================== */}
+            
 
-        <div className='bg-info' style={{height:"400px"}}>
+        <div className='bg-info' style={{height:"100vh"}}>
         <Table>
             <thead>
                 <tr> 
@@ -140,14 +176,14 @@ const Home = () => {
                 <div key={index}>
                 <table className="table">
                <tbody>
-                   <tr key={itemval.uname}>
-                   <td>{itemval.fname}</td>
-                   <td>{itemval.lname}</td>
-                   <td>{itemval.uname}</td>
+                   <tr key={itemval?.uname}>
+                   <td>{itemval?.fname}</td>
+                   <td>{itemval?.lname}</td>
+                   <td>{itemval?.uname}</td>
                    <td> 
-                        <div className='gap-4 text-center' style={{color:"red", width:"50%"}}>
-                        <TiDelete onClick={()=> {deleteItem(itemval.uname)}}/>
-                        <Button onClick={()=>updateRow(itemval.uname)} className='bg-transparent text-black'>edit</Button>
+                        <div className='d-flex gap-4 text-center' style={{color:"red", width:"50%"}}>
+                        <div className='d-flex rounded-circle bg-white' style={{width:"35px", height:"35px", fontSize:"35px"}}><TiDelete onClick={()=> {deleteItem(itemval.uname)}}/></div>
+                        <Button onClick={()=>editRow(itemval.uname, index)} className='bg-white text-black'>edit</Button>
                         </div>
                    </td>
                    </tr>    
