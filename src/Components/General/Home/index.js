@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
-import { Button, Container, Form, Table, Modal } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom';
+// import './style.css'
+import { Button, Container, Form, Table, Modal,Row, Col, Toast, FormControl } from 'react-bootstrap'
 // import { useNavigate } from 'react-router-dom';
 import { TiDelete} from "react-icons/ti";
+import { MdModeEditOutline} from "react-icons/md";
+import { useRef } from 'react';
 
 const Home = () => {
-    let navigate = useNavigate();
-
     // states //
 
     const [items, setItems]=useState([]);
@@ -17,14 +17,27 @@ const Home = () => {
     });
 
     const [isEditItem, setIsEditItem]= useState("");
+//============================//
+// toast
+
+    const [showw, setShoww] = useState(false);
 
     //======================================//
-    // states for modal
+    // states and functions for modal
 
     const [show, setShow] = useState(false);
+    const [aBtn, setABtn]= useState("");
+    const [uBtn, setUBtn]= useState("");
 
     const handleClose = () => setShow(false);
-    const handleShow = () => setShow(true);
+    
+    const handleShow = () =>{
+         setShow(true);
+         setABtn("add user");
+         setUBtn("");
+    }
+
+   
     //============================================//
 
 
@@ -64,24 +77,32 @@ const Home = () => {
         setItems((olditems)=>{
             return [...olditems, data];
         });
+        
         setData({
             fname:"",
             lname:'',
             uname:""
         });
         setShow(false);
+
+        setShoww(true)
+        
+        
     };
     
 
     // code for delete row in a table //
 
     const deleteItem= (uname) =>{
+
+       alert("are u sure to delete the user")
        console.log("deleted", uname);
        const arr=items.filter((arrElem, index)=>{
         return arrElem.uname !== uname;
 
     });
        setItems(arr);
+       
     }
 
     // code for edit row in a table //
@@ -101,6 +122,10 @@ const Home = () => {
 
         setIsEditItem(INDEX);
         handleShow();
+        setABtn("");
+        setUBtn("update");
+        
+        
     }
 
     // code to update row in a table //
@@ -126,78 +151,107 @@ const Home = () => {
    
 
   return (
-    <Container className='mt-4'>
+    <Container className='p-0 shadow-sm main_Container mt-4'>
+             
+             <div className='Toast'>
+              <Row className='row'>
+                <Col xs={6}>
+                    <Toast onClose={() => setShoww(false)} show={showw} delay={3000} autohide>
+                    <Toast.Header>
+                        <img
+                        src="holder.js/20x20?text=%20"
+                        className="rounded me-2"
+                        alt=""
+                        />
+                        <strong className="me-auto">Bootstrap</strong>
+                        <small>recently</small>
+                    </Toast.Header>
+                    <Toast.Body>user added successfully</Toast.Body>
+                    </Toast>
+                </Col>
+                </Row>
+             </div>
+             
 
             {/* //============================= */}
-            <div className='text-center'><Button className='mb-4 justify-content-center bg-info text-black' onClick={handleShow} variant="primary">add row</Button></div>
+            <div className="d-flex align-items-center mb-2" style={{ margin:"0 auto"}}>
+            <Button className='bg-transparent text-black' onClick={handleShow}>add user</Button>
+            <Form className=''>
+                <FormControl
+                type="search"
+                placeholder="Search"
+                className="me-2"
+                aria-label="Search"
+                />
+                {/* <Button variant="outline-success">Search</Button> */}
+            </Form>
+            </div>
+           
+           
 
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                <Modal.Title>Put the below details for employee</Modal.Title>
+                <Modal.Title>Put the below details for user</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                 <Form className='mb-4'>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    
+                    <Form.Control type="text" name="fName" value={data?.fname} onChange={inputEvent} placeholder="enter first name" />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
                 
-                <Form.Control type="text" name="fName" value={data?.fname} onChange={inputEvent} placeholder="enter first name" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-               
-                <Form.Control type="text" name="lName" value={data?.lname} onChange={inputEvent} placeholder="enter last name" />
-            </Form.Group>
-            <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
-               
-                <Form.Control type="text" name="uName" value={data?.uname} onChange={inputEvent} placeholder="enter username" />
-            </Form.Group>
-            
-        </Form>
+                    <Form.Control type="text" name="lName" value={data?.lname} onChange={inputEvent} placeholder="enter last name" />
+                </Form.Group>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                
+                    <Form.Control type="text" name="uName" value={data?.uname} onChange={inputEvent} placeholder="enter username" />
+                </Form.Group>
+                </Form>
                 </Modal.Body>
                 <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>Close</Button>
-                <Button onClick={updatItem} variant="primary">update</Button>
-                <Button variant="primary" onClick={addEmployee}>add row</Button>
+                {(uBtn)?<Button onClick={updatItem}>{uBtn}</Button>:null}
+                {(aBtn)?<Button variant="primary" onClick={addEmployee}>{aBtn}</Button>:null}
+    
                 </Modal.Footer>
             </Modal>
             {/* ========================================== */}
-            
-
-        <div className='bg-info' style={{height:"100vh"}}>
-        <Table>
-            <thead>
-                <tr> 
-                    <th>fname</th>
-                    <th>lname</th>
-                    <th>uname</th>
-                </tr>
-            </thead>
-        </Table>
-           {items.map((itemval, index)=>{
-               return (
-                <div key={index}>
-                <table className="table">
-               <tbody>
-                   <tr key={itemval?.uname}>
-                   <td>{itemval?.fname}</td>
-                   <td>{itemval?.lname}</td>
-                   <td>{itemval?.uname}</td>
-                   <td> 
-                        <div className='d-flex gap-4 text-center' style={{color:"red", width:"50%"}}>
-                        <div className='d-flex rounded-circle bg-white' style={{width:"35px", height:"35px", fontSize:"35px"}}><TiDelete onClick={()=> {deleteItem(itemval.uname)}}/></div>
-                        <Button onClick={()=>editRow(itemval.uname, index)} className='bg-white text-black'>edit</Button>
-                        </div>
-                   </td>
-                   </tr>    
-                </tbody>
-                </table>
-                </div>
-             )       
-           })}
-           
-        </div>
-
-    
 
 
+
+            <Table striped bordered hover size="sm">
+                <thead>
+                    <tr>
+                    <th>#</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Username</th>
+                    <th>Actions</th>
+                    </tr>
+                </thead>
+
+                {items.map((itemval, index)=>{
+                    return(
+                            <tbody>
+                            <tr key={itemval?.uname}>
+                            <td>{index}</td>
+                            <td>{itemval?.fname}</td>
+                            <td>{itemval?.lname}</td>
+                            <td>{itemval?.uname}</td>
+                            <td> 
+                            <div className='d-flex  justify-content-end gap-4' style={{color:"red", width:"100%"}}>
+                            <div className='d-flex rounded-circle bg-white' style={{width:"35px", height:"35px", fontSize:"35px"}}>
+                            <TiDelete className='delete' onClick={()=> {deleteItem(itemval.uname)}}/>
+                            </div>
+                            <MdModeEditOutline className='text-warning edit' onClick={()=>editRow(itemval.uname, index)}/>
+                            </div>
+                            </td>
+                            </tr>
+                            </tbody>
+                        )
+                    })}
+                </Table>
     </Container>
   )
 }

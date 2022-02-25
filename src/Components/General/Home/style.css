@@ -1,0 +1,29 @@
+.main_Container{
+    height: 100vh;
+}
+.Toast{
+    width: 100%;
+}
+.row{
+    position: absolute;
+    margin-top: -80px;
+    
+    width: 100%;
+    position: absolute;
+    justify-content: end;
+    margin-left: 280px;
+}
+
+
+.tableDiv{
+    box-shadow: 2px 2px 2px 2px;
+    /* background-color: red; */
+    padding: 20px;
+    width: 60%;
+    height: 100%;
+    margin: 0 auto;
+}
+
+.tablE tbody tr td{
+    width: 50%;
+}
