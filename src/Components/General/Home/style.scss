@@ -1,0 +1,55 @@
+.Toast{
+    width: 100%;
+    position: absolute;
+    transform: translate(0px, -55px);
+    
+    display: flex-end;
+    .row{
+        position: absolute;
+        width: 100%;
+        transform: translateX(75%);
+
+    }
+}
+
+.main_Container{
+    .headingDiv{
+        display: flex;
+        margin-bottom: 10px;
+        justify-content: space-between;
+        
+        .addUBtn{
+            background-color: transparent;
+            color: blue;
+            box-shadow: 1px 1px 1px 1px blue;
+
+        }
+        .addUBtn:hover{
+            color: white;
+            background-color: blue;
+            box-shadow: none;
+            
+        }       
+    }
+
+    .footer{
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .Name:hover{
+        cursor: pointer;
+        color: blue;
+    }
+
+    .theTable{
+        .delete:hover{
+            cursor: pointer;
+        }
+        .edit :hover{
+            cursor: pointer;
+        }
+        
+    }
+    
+}
