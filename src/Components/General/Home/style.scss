@@ -35,6 +35,23 @@
     .footer{
         display: flex;
         justify-content: space-between;
+
+        .navigationButtons{
+            display: flex;
+            gap: 20px;
+            list-style-type: none;
+            text-decoration: none;
+            :hover{
+                color: blue;
+            }
+        }
+
+        .nextButton{
+            text-decoration: none;
+        }
+        .previousButton{
+            text-decoration: none;
+        }
     }
 
     .Name:hover{

@@ -2,7 +2,12 @@ import React, { useState } from 'react'
 import './style.scss'
 import { Button, Container, Form, Table, Modal,Row, Col, Toast, FormControl, OverlayTrigger, Tooltip } from 'react-bootstrap'
 import { TiDelete} from "react-icons/ti";
-import { MdModeEditOutline} from "react-icons/md";
+import { MdModeEditOutline, MdOutlineNavigateNext} from "react-icons/md";
+import { GrFormPrevious} from "react-icons/gr";
+
+import ReactPaginate from 'react-paginate';
+
+
 
 const Home = () => {
 
@@ -22,9 +27,23 @@ const Home = () => {
     const [aBtn, setABtn]= useState("");
     const [uBtn, setUBtn]= useState("");
 
-    // Now you are to functions world 👎
+    // const [users, setUsers]= useState(items.slice(0, 11));
+    const [page, setPage]= useState(0);
 
-    // Modal ftns 🥰
+    const usersPerpage = 4; 
+    const pageVisited = page * usersPerpage;
+
+    const totalPages = Math.ceil(items.length / usersPerpage);
+    const changePage =({selected})=>{
+        setPage(selected);
+        console.log(selected);
+    };
+    console.log(items);
+
+
+    // Now you are to functions world 🥰
+
+    // Modal ftns 👎
     const handleClose = () => setShow(false);
     const handleShow = () =>{
          setShow(true);
@@ -32,7 +51,7 @@ const Home = () => {
          setUBtn("");
     }
 
-    // you are here to input function 😄 
+    // you are here to input function 👎 
 
     const inputEvent = (event) =>{
         const {value, name}= event.target;
@@ -65,7 +84,7 @@ const Home = () => {
      
     // function on "add user" button 👎
     
-    const addUser = (uname) =>{
+    const addUser = () =>{
         setItems((olditems)=>{
             return [...olditems, data];
         });
@@ -75,8 +94,9 @@ const Home = () => {
             uname:""
         });
         setShow(false);
-        setShoww(true);   
+        setShoww(true); 
     };
+      
     
 
     // function on delete user 👎
@@ -112,7 +132,7 @@ const Home = () => {
 
     // function on update user 👎
 
-    const updatItem =()=>{
+    const updatItem = () =>{
         let a = items[isEditItem]=data;
         console.log(a);
         setData({
@@ -125,10 +145,10 @@ const Home = () => {
             lname:'',
             uname:""
         });
-        setShow(false);
+        setShow(false)
     }
 
-    // function to sort data on "first name" click 👎
+    // function to sort data on "first name" click 👇 :down
 
      const SortData= ()=>{
        const a = items.sort(function(a, b) {
@@ -144,7 +164,7 @@ const Home = () => {
             return 0;
             
           });
-          setItems([a])
+        //   setItems([a])
           setItems(a);
           console.log(items);
        }
@@ -162,7 +182,7 @@ const Home = () => {
                         <strong className="me-auto">Hello!</strong>
                         <small>recently</small>
                     </Toast.Header>
-                    <Toast.Body>user added successfully</Toast.Body>
+                    <Toast.Body>New user added successfully</Toast.Body>
                     </Toast>
                 </Col>
                 </Row>
@@ -229,9 +249,7 @@ const Home = () => {
                     <th>#</th>
                     <th>
                     <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Sort</Tooltip>}>
-                        <span className="">
-                            <th onClick={ ()=>SortData()} className='Name'>First Name</th>
-                        </span>
+                        <span onClick={ ()=>SortData()} className='Name'>First Name</span>
                     </OverlayTrigger> 
                     </th>
                     
@@ -241,30 +259,30 @@ const Home = () => {
                     </tr>
                 </thead>
                 <tbody>
-                {items.map((itemval, index)=>{
-                    return(
-                            
-                            <tr key={itemval?.uname}>
-                            <td>{index+1}</td>
-                            <td >{itemval?.fname}</td>
-                            <td>{itemval?.lname}</td>
-                            <td>{itemval?.uname}</td>
-                            <td>
+               { items.slice(pageVisited, pageVisited + usersPerpage).map((itemval, index)=>{
+                
+                return( 
+                    <tr key={itemval?.uname}>
+                    <td>{index+1}</td>
+                    <td >{itemval?.fname}</td>
+                    <td>{itemval?.lname}</td>
+                    <td>{itemval?.uname}</td>
+                    <td>
 
-                            <div className='d-flex justify-content-center gap-4' style={{color:"red", width:"100%"}}>
-                                <div className='d-flex align-items-center justify-content-center' style={{width:"30px", height:"30px", fontSize:"25px"}}>
-                                    <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Delete</Tooltip>}>
-                                        <span className="">
-                                            <TiDelete className='d-flex delete' onClick={()=> {deleteItem(itemval.uname)}}/>
-                                        </span>
-                                    </OverlayTrigger>
-                                </div>
-                                <div>
-                                    <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Edit</Tooltip>}>
-                                        <span className="">
-                                        <MdModeEditOutline className='text-warning edit' onClick={()=>editRow(itemval.uname, index)}/>
-                                        </span>
-                                    </OverlayTrigger> 
+                    <div className='d-flex justify-content-center gap-4' style={{color:"red", width:"100%"}}>
+                        <div className='d-flex align-items-center justify-content-center' style={{width:"30px", height:"30px", fontSize:"25px"}}>
+                            <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Delete</Tooltip>}>
+                                <span className="">
+                                    <TiDelete className='d-flex delete' onClick={()=> {deleteItem(itemval.uname)}}/>
+                                </span>
+                            </OverlayTrigger>
+                        </div>
+                        <div>
+                            <OverlayTrigger overlay={<Tooltip id="tooltip-disabled">Edit</Tooltip>}>
+                                <span className="">
+                                <MdModeEditOutline className='text-warning edit' onClick={()=>editRow(itemval.uname, index)}/>
+                                </span>
+                            </OverlayTrigger> 
                                 </div>
                             </div>
 
@@ -272,31 +290,27 @@ const Home = () => {
                             </tr>  
                         )
                     })}
-                    </tbody>
+                </tbody>
                 </Table>
 
 
                 {/* Let's start coding for Pagination 👎 */}
 
                    <div className='footer'>
-                   <p>Showing 5 out of 25 entries</p>
-                    <nav aria-label="Page navigation example">
-                        <ul className="pagination">
-                            <li className="page-item">
-                            <a className="page-link" href="#" aria-label="Previous">
-                                <span aria-hidden="true">&laquo;</span>
-                            </a>
-                            </li>
-                            <li className="page-item"><a className="page-link" href="#">1</a></li>
-                            <li className="page-item"><a className="page-link" href="#">2</a></li>
-                            <li className="page-item"><a className="page-link" href="#">3</a></li>
-                            <li className="page-item">
-                            <a className="page-link" href="#" aria-label="Next">
-                                <span aria-hidden="true">&raquo;</span>
-                            </a>
-                            </li>
-                        </ul>
-                    </nav>
+                   <p>Showing 5 out of 10 entries</p>
+                   
+                   <ReactPaginate
+                        previousLabel= {<GrFormPrevious/>}
+                        nextLabel= {<MdOutlineNavigateNext/>}
+                        pageCount={totalPages}
+                        onPageChange= {changePage}
+                        containerClassName={"navigationButtons"}
+                        previousLinkClassName={"previousButton"}
+                        nextLinkClassName={"nextButton"}
+                        disabledClassName={"navigationDisabled"}
+                        activeClassName={"navigationActive"}
+                   />
+            
                    </div>
            </div>
     </Container>
