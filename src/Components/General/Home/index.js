@@ -29,8 +29,9 @@ const Home = () => {
 
     // const [users, setUsers]= useState(items.slice(0, 11));
     const [page, setPage]= useState(0);
+    const [search, setSearch] = React.useState('');
 
-    const usersPerpage = 4; 
+    const usersPerpage = 2; 
     const pageVisited = page * usersPerpage;
 
     const totalPages = Math.ceil(items.length / usersPerpage);
@@ -39,6 +40,11 @@ const Home = () => {
         console.log(selected);
     };
     console.log(items);
+
+
+    const handleSearch = (event) => {
+        setSearch(event.target.value);
+      };
 
 
     // Now you are to functions world 🥰
@@ -199,7 +205,9 @@ const Home = () => {
             <div><Button className='addUBtn' onClick={handleShow}>add user</Button></div>
             <div>
             <Form >
-                <FormControl className="a"
+                <FormControl onChange={handleSearch}
+                id="search"
+                className="a"
                 type="search"
                 placeholder="Search"
                 className="me-2"
@@ -259,10 +267,16 @@ const Home = () => {
                     </tr>
                 </thead>
                 <tbody>
-               { items.slice(pageVisited, pageVisited + usersPerpage).map((itemval, index)=>{
+               { items.slice(pageVisited, pageVisited + usersPerpage).filter((itemval)=> {
+                   if(search==""){
+                       return itemval
+                   } else if(itemval.fname.toLowerCase().includes(search.toLocaleLowerCase())){
+                       return itemval
+                   }
+               }).map((itemval, index)=>{
                 
                 return( 
-                    <tr key={itemval?.uname}>
+                    <tr key={itemval?.uname}> 
                     <td>{index+1}</td>
                     <td >{itemval?.fname}</td>
                     <td>{itemval?.lname}</td>
@@ -297,7 +311,7 @@ const Home = () => {
                 {/* Let's start coding for Pagination 👎 */}
 
                    <div className='footer'>
-                   <p>Showing 5 out of 10 entries</p>
+                   <p>Showing 4 out of {items.length} entries</p>
                    
                    <ReactPaginate
                         previousLabel= {<GrFormPrevious/>}
